@@ -103,7 +103,7 @@ class TimeBlocksWidget extends StatelessWidget {
                 ),
               ],
             ),
-            child: _buildYearGrid(),
+            child: _buildYearGrid(context),
           ),
         ),
       ],
@@ -420,7 +420,10 @@ class TimeBlocksWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildYearGrid() {
+  Widget _buildYearGrid(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -433,9 +436,11 @@ class TimeBlocksWidget extends StatelessWidget {
 
           Expanded(
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                childAspectRatio: 3,
+                childAspectRatio: isSmallScreen
+                    ? 2.2
+                    : 3, // Reduced aspect ratio for taller buttons on mobile
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
@@ -460,7 +465,9 @@ class TimeBlocksWidget extends StatelessWidget {
                       child: Text(
                         _getMonthName(month),
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: isSmallScreen
+                              ? 13
+                              : 12, // Slightly larger font on mobile
                           fontWeight: FontWeight.bold,
                           color: intensity > 0 ? Colors.white : Colors.black,
                         ),
