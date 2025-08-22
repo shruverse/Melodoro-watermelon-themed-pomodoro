@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/study_session.dart';
 import '../widgets/time_blocks_widget.dart';
 
-class BlocksScreen extends StatefulWidget {
+class StatsBlocksScreen extends StatefulWidget {
   final List<StudySession> sessions;
 
-  const BlocksScreen({super.key, required this.sessions});
+  const StatsBlocksScreen({super.key, required this.sessions});
 
   @override
-  State<BlocksScreen> createState() => _BlocksScreenState();
+  State<StatsBlocksScreen> createState() => _StatsBlocksScreenState();
 }
 
-class _BlocksScreenState extends State<BlocksScreen>
+class _StatsBlocksScreenState extends State<StatsBlocksScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   DateTime _selectedDate = DateTime.now();
@@ -28,15 +28,6 @@ class _BlocksScreenState extends State<BlocksScreen>
     super.dispose();
   }
 
-  // Day starts and ends at 6 AM
-  DateTime _getStudyDayStart(DateTime date) {
-    final dayStart = DateTime(date.year, date.month, date.day, 6);
-    if (date.hour < 6) {
-      return dayStart.subtract(const Duration(days: 1));
-    }
-    return dayStart;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +38,7 @@ class _BlocksScreenState extends State<BlocksScreen>
           Container(
             padding: const EdgeInsets.all(20),
             child: const Text(
-              '🍉 Study Blocks',
+              '🍉 Study Stats',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'timer_screen.dart';
-import 'blocks_screen.dart';
+import 'stats_blocks_screen.dart';
 import 'goal_screen.dart';
 import '../models/study_session.dart';
 
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      BlocksScreen(sessions: todaySessions),
+      StatsBlocksScreen(sessions: todaySessions),
       TimerScreen(onTimerComplete: _onTimerComplete),
       GoalScreen(
         goalMinutes: dailyGoalMinutes,
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         elevation: 8,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Blocks'),
+          BottomNavigationBarItem(icon: Icon(Icons.analytics), label: 'Stats'),
           BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Timer'),
           BottomNavigationBarItem(icon: Icon(Icons.local_drink), label: 'Goal'),
         ],
