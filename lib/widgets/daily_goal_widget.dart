@@ -68,9 +68,11 @@ class _DailyGoalWidgetState extends State<DailyGoalWidget>
   Widget build(BuildContext context) {
     final progress = widget.studiedMinutes / widget.goalMinutes;
     final isCompleted = progress >= 1.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -88,25 +90,30 @@ class _DailyGoalWidgetState extends State<DailyGoalWidget>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '🍉 Daily Study Goal',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Flexible(
+                child: Text(
+                  '🍉 Daily Study Goal',
+                  style: TextStyle(
+                    fontSize: isSmallScreen ? 16 : 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               if (isCompleted)
-                const Icon(
+                Icon(
                   Icons.check_circle,
-                  color: Color(0xFF4CAF50),
-                  size: 24,
+                  color: const Color(0xFF4CAF50),
+                  size: isSmallScreen ? 20 : 24,
                 ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: isSmallScreen ? 8 : 12),
 
           // Watermelon glass with juice
           Center(
-            child: Container(
-              width: 120,
-              height: 140,
+            child: SizedBox(
+              width: isSmallScreen ? 100 : 120,
+              height: isSmallScreen ? 120 : 140,
               child: AnimatedBuilder(
                 animation: _fillAnimation,
                 builder: (context, child) {
@@ -121,24 +128,31 @@ class _DailyGoalWidgetState extends State<DailyGoalWidget>
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: isSmallScreen ? 8 : 12),
 
           // Progress text
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 '${widget.studiedMinutes ~/ 60}h ${widget.studiedMinutes % 60}m studied',
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 12 : 14,
+                  color: Colors.grey,
+                ),
               ),
+              const SizedBox(height: 4),
               Text(
                 'Goal: ${widget.goalMinutes ~/ 60}h ${widget.goalMinutes % 60}m',
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 12 : 14,
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
 
           // Progress bar
           LinearProgressIndicator(
@@ -150,13 +164,13 @@ class _DailyGoalWidgetState extends State<DailyGoalWidget>
             minHeight: 6,
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: isSmallScreen ? 6 : 8),
 
           // Percentage text
           Text(
             '${(progress * 100).toInt()}% complete',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: isSmallScreen ? 11 : 12,
               color: isCompleted
                   ? const Color(0xFF4CAF50)
                   : const Color(0xFFE91E63),

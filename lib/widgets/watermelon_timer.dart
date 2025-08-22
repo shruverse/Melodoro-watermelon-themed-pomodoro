@@ -142,15 +142,28 @@ class WatermelonTimerState extends State<WatermelonTimer>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 400;
+
+    // Responsive timer size
+    final timerSize = isSmallScreen
+        ? math.min(screenWidth * 0.7, 240.0)
+        : math.min(screenWidth * 0.6, 280.0);
+
+    // Responsive font sizes
+    final timeFontSize = isSmallScreen ? 28.0 : 32.0;
+    final statusFontSize = isSmallScreen ? 12.0 : 14.0;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Timer display
         GestureDetector(
           onTap: _showTimerPicker,
-          child: Container(
-            width: 280,
-            height: 280,
+          child: SizedBox(
+            width: timerSize,
+            height: timerSize,
             child: AnimatedBuilder(
               animation: Listenable.merge([
                 _progressController,
@@ -169,8 +182,8 @@ class WatermelonTimerState extends State<WatermelonTimer>
                       children: [
                         Text(
                           _formatTime(_remainingSeconds),
-                          style: const TextStyle(
-                            fontSize: 32,
+                          style: TextStyle(
+                            fontSize: timeFontSize,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -182,8 +195,8 @@ class WatermelonTimerState extends State<WatermelonTimer>
                               : _isRunning
                               ? 'Studying...'
                               : 'Tap to set time',
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: statusFontSize,
                             color: Colors.white70,
                           ),
                         ),
@@ -196,7 +209,7 @@ class WatermelonTimerState extends State<WatermelonTimer>
           ),
         ),
 
-        const SizedBox(height: 40),
+        SizedBox(height: isSmallScreen ? 24 : 40),
 
         // Control buttons
         Row(
@@ -220,7 +233,7 @@ class WatermelonTimerState extends State<WatermelonTimer>
                 onPressed: _startTimer,
                 color: const Color(0xFF4CAF50),
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: isSmallScreen ? 12 : 20),
             ],
             if (_isPaused || _isRunning)
               _buildControlButton(
@@ -239,15 +252,20 @@ class WatermelonTimerState extends State<WatermelonTimer>
     required VoidCallback onPressed,
     required Color color,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final buttonPadding = isSmallScreen ? 12.0 : 16.0;
+    final iconSize = isSmallScreen ? 20.0 : 24.0;
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(buttonPadding),
       ),
-      child: Icon(icon, size: 24),
+      child: Icon(icon, size: iconSize),
     );
   }
 

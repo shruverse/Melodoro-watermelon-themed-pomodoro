@@ -16,20 +16,25 @@ class _TimerScreenState extends State<TimerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final padding = isSmallScreen ? 16.0 : 20.0;
+    final headerFontSize = isSmallScreen ? 24.0 : 28.0;
+
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(padding),
       child: Column(
         children: [
           // Header
-          const Text(
+          Text(
             '🍉 Study Timer',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: headerFontSize,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF2E7D32),
+              color: const Color(0xFF2E7D32),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: isSmallScreen ? 16 : 20),
 
           // Main timer
           Expanded(
@@ -43,27 +48,48 @@ class _TimerScreenState extends State<TimerScreen> {
 
           // Quick timer presets
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 16 : 20),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Quick Start',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: isSmallScreen ? 14 : 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildPresetButton(context, '15 min', 15),
-                    _buildPresetButton(context, '25 min', 25),
-                    _buildPresetButton(context, '45 min', 45),
-                    _buildPresetButton(context, '60 min', 60),
-                  ],
-                ),
+                SizedBox(height: isSmallScreen ? 12 : 16),
+                // Responsive button layout
+                isSmallScreen
+                    ? Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildPresetButton(context, '15 min', 15),
+                              _buildPresetButton(context, '25 min', 25),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildPresetButton(context, '45 min', 45),
+                              _buildPresetButton(context, '60 min', 60),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildPresetButton(context, '15 min', 15),
+                          _buildPresetButton(context, '25 min', 25),
+                          _buildPresetButton(context, '45 min', 45),
+                          _buildPresetButton(context, '60 min', 60),
+                        ],
+                      ),
               ],
             ),
           ),
@@ -73,26 +99,41 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   Widget _buildPresetButton(BuildContext context, String label, int minutes) {
-    return ElevatedButton(
-      onPressed: () {
-        _timerKey.currentState?.setTimer(minutes);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Timer set to $minutes minutes'),
-            duration: const Duration(seconds: 1),
-            backgroundColor: const Color(0xFF4CAF50),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final buttonWidth = isSmallScreen ? screenWidth * 0.4 : null;
+
+    return SizedBox(
+      width: buttonWidth,
+      child: ElevatedButton(
+        onPressed: () {
+          _timerKey.currentState?.setTimer(minutes);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Timer set to $minutes minutes'),
+              duration: const Duration(seconds: 1),
+              backgroundColor: const Color(0xFF4CAF50),
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF4CAF50),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4CAF50),
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallScreen ? 12 : 16,
+            vertical: isSmallScreen ? 10 : 12,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: isSmallScreen ? 11 : 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

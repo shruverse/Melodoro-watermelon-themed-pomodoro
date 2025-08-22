@@ -19,8 +19,14 @@ class GoalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final padding = isSmallScreen ? 16.0 : 20.0;
+    final headerFontSize = isSmallScreen ? 24.0 : 28.0;
+    final iconSize = isSmallScreen ? 24.0 : 28.0;
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(padding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,26 +34,28 @@ class GoalScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '🍉 Daily Goal',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2E7D32),
+              Flexible(
+                child: Text(
+                  '🍉 Daily Goal',
+                  style: TextStyle(
+                    fontSize: headerFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2E7D32),
+                  ),
                 ),
               ),
               IconButton(
                 onPressed: () => _showGoalSettingDialog(context),
-                icon: const Icon(
+                icon: Icon(
                   Icons.settings,
-                  color: Color(0xFF2E7D32),
-                  size: 28,
+                  color: const Color(0xFF2E7D32),
+                  size: iconSize,
                 ),
                 tooltip: 'Set Daily Goal',
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: isSmallScreen ? 16 : 20),
 
           // Daily goal widget
           DailyGoalWidget(
@@ -55,12 +63,12 @@ class GoalScreen extends StatelessWidget {
             studiedMinutes: studiedMinutes,
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: isSmallScreen ? 16 : 20),
 
           // Today's sessions
           if (sessions.isNotEmpty) ...[
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -75,20 +83,31 @@ class GoalScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Today\'s Sessions',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 16 : 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: isSmallScreen ? 8 : 12),
                   ...sessions.map((session) => _buildSessionItem(session)),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: isSmallScreen ? 16 : 20),
           ],
 
-          // Task list
-          const Expanded(child: TaskListWidget()),
+          // Task list - now with constrained height
+          Container(
+            height:
+                MediaQuery.of(context).size.height *
+                0.7, // Take 50% of screen height
+            child: const TaskListWidget(),
+          ),
+
+          // Add bottom padding for better scrolling experience
+          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
         ],
       ),
     );

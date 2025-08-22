@@ -30,26 +30,31 @@ class _StatsBlocksScreenState extends State<StatsBlocksScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400;
+    final padding = isSmallScreen ? 16.0 : 20.0;
+    final headerFontSize = isSmallScreen ? 24.0 : 28.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(20),
-            child: const Text(
+            padding: EdgeInsets.all(padding),
+            child: Text(
               '🍉 Study Stats',
               style: TextStyle(
-                fontSize: 28,
+                fontSize: headerFontSize,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2E7D32),
+                color: const Color(0xFF2E7D32),
               ),
             ),
           ),
 
           // Tab bar
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: padding),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -78,7 +83,7 @@ class _StatsBlocksScreenState extends State<StatsBlocksScreen>
             ),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: isSmallScreen ? 16 : 20),
 
           // Tab content
           Expanded(
